@@ -25,17 +25,17 @@ fn decode(val: &str) -> (serde_json::Value, &str) {
         (DICT_PREFIX, rest) => {
             if let Some(val) = rest.strip_suffix(SUFFIX) {
                 let (list, rest) = get_list_of_values(val);
-                // convert list to dictionary
                 let mut dict = serde_json::Map::new();
                 list.iter().enumerate().for_each(|(i, value)| {
                     if i % 2 == 0 {
-                        // key should always be a string
                         if let serde_json::Value::String(key) = value {
                             if list.len() > i + 1 {
                                 dict.insert(key.to_string(), list[i + 1].clone());
                             } else {
                                 panic!("Value not provided");
                             }
+                        } else {
+                            panic!("Key should be a string");
                         }
                     }
                 });
@@ -89,7 +89,6 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
 
     #[test]
