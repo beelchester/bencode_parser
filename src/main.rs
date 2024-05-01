@@ -97,6 +97,14 @@ mod tests {
         let (decoded, _) = decode("i123e");
         assert_eq!(decoded, serde_json::Value::Number(123.into()));
     }
+    #[test]
+    fn test_decode_neg_int() {
+        let (decoded, _) = decode("i-43e");
+        assert_eq!(
+            decoded,
+            serde_json::Value::Number("-43".parse::<i64>().unwrap().into())
+        );
+    }
 
     #[test]
     fn test_decode_byte_string() {
